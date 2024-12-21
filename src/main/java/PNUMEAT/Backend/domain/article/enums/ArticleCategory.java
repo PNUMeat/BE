@@ -1,9 +1,11 @@
 package PNUMEAT.Backend.domain.article.enums;
 
 public enum ArticleCategory {
-    NOMAL(1, "일반"),
-    WAITING(2, "대기"),
-    ANOUNCE(3, "공지");
+    NORMAL(-1, "일반"),
+    STUDY_REVIEW(1, "스터디 복습"),
+    STUDY_PREVIEW(2, "스터디 예습"),
+    STUDY(3, "스터디"),
+    CODING_TEST(4, "코딩 테스트");
 
     private final int code;
     private final String name;
@@ -19,5 +21,12 @@ public enum ArticleCategory {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isSubject(ArticleCategory category){
+        if(category.getCode() > 0){
+            return true;
+        }
+        return false;
     }
 }

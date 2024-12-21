@@ -55,7 +55,7 @@ public class Article extends TimeStamp {
     public Article() {}
 
     public Article(Team team, Member member, String articleTitle, String articleBody,
-        ArticleCategory articleCategory, List<ArticleImage> images) {
+                   ArticleCategory articleCategory, List<ArticleImage> images) {
         this.team = team;
         this.member = member;
         this.articleTitle = articleTitle;
