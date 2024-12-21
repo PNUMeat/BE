@@ -48,17 +48,17 @@ public class ArticleController {
     // 게시글 저장
     @PostMapping
     public ResponseEntity<?> createArticle(
-        @LoginMember Member member,
-        @ModelAttribute @Valid ArticleRequest articleRequest,
-        @RequestPart(value = "image", required = false) MultipartFile image) {
+            @LoginMember Member member,
+            @ModelAttribute @Valid ArticleRequest articleRequest,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
 
         articleService.isMemberInTeam(member.getId(),articleRequest.teamId());
 
         articleService.save(member.getId(), articleRequest, image);
 
         return ResponseEntity.status(ARTICLE_CREATE_SUCCESS.getStatusCode())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiResponse.createResponseWithMessage(ARTICLE_CREATE_SUCCESS.getMessage()));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ApiResponse.createResponseWithMessage(ARTICLE_CREATE_SUCCESS.getMessage()));
     }
 
     // 내 게시글 조회
@@ -67,80 +67,80 @@ public class ArticleController {
         List<Article> myArticles = articleService.getMyArticles(member.getId());
 
         List<ArticleResponse> responses = myArticles.stream()
-            .map(ArticleResponse::of)
-            .toList();
+                .map(ArticleResponse::of)
+                .toList();
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiResponse.successResponse(responses));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ApiResponse.successResponse(responses));
     }
 
     // 팀 기준 게시글 조회
     @GetMapping("/team/{teamId}")
     public ResponseEntity<?> getArticlesByTeam(
-        @PathVariable Long teamId,
-        @LoginMember Member member) {
+            @PathVariable Long teamId,
+            @LoginMember Member member) {
 
         articleService.isMemberInTeam(member.getId(), teamId);
 
         List<Article> articles = articleService.getArticlesByTeam(teamId);
         List<ArticleResponse> responses = articles.stream()
-            .map(ArticleResponse::of)
-            .toList();
+                .map(ArticleResponse::of)
+                .toList();
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiResponse.successResponse(responses));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ApiResponse.successResponse(responses));
     }
 
     // 특정 게시글 조회 이건 쓸일 없을것같음
     @GetMapping("/{id}")
     public ResponseEntity<?> getArticleById(
-        @PathVariable Long id) {
+            @PathVariable Long id) {
 
         Article article = articleService.getArticleById(id);
 
         ArticleResponse response = ArticleResponse.of(article);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiResponse.successResponse(response));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ApiResponse.successResponse(response));
     }
 
     // 게시글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteArticle(
-        @PathVariable Long id,
-        @LoginMember Member member) {
+            @PathVariable Long id,
+            @LoginMember Member member) {
 
         articleService.deleteArticle(id, member.getId());
 
         return ResponseEntity.status(ARTICLE_DELETE_SUCCESS.getStatusCode())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiResponse.createResponseWithMessage(ARTICLE_DELETE_SUCCESS.getMessage()));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ApiResponse.createResponseWithMessage(ARTICLE_DELETE_SUCCESS.getMessage()));
     }
 
     // 게시글 수정
     @PutMapping("/{id}")
     public ResponseEntity<?> updateArticle(
-        @PathVariable Long id,
-        @ModelAttribute ArticleRequest articleRequest,
-        @RequestPart(value = "image", required = false) MultipartFile image,
-        @LoginMember Member member) {
+            @PathVariable Long id,
+            @ModelAttribute ArticleRequest articleRequest,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @LoginMember Member member) {
 
         articleService.updateArticle(id, articleRequest, image, member.getId());
 
         return ResponseEntity.status(ARTICLE_PUT_SUCCESS.getStatusCode())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiResponse.createResponseWithMessage(ARTICLE_PUT_SUCCESS.getMessage()));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ApiResponse.createResponseWithMessage(ARTICLE_PUT_SUCCESS.getMessage()));
     }
     // 날짜기준 게시물 조회
     @GetMapping("/{teamId}/by-date")
     public ResponseEntity<?> getArticlesByTeamAndDate(
-        @PathVariable Long teamId,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-        @LoginMember Member member,
-        @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PathVariable Long teamId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @LoginMember Member member,
+            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
 
         articleService.isMemberInTeam(member.getId(), teamId);
 
@@ -149,8 +149,8 @@ public class ArticleController {
         Page<ArticleResponse> responsePage = articlePage.map(ArticleResponse::of);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiResponse.successResponse(responsePage));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ApiResponse.successResponse(responsePage));
     }
 
 }

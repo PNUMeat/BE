@@ -48,12 +48,12 @@ class ArticleRepositoryTest {
 
         // Create and save a test Team
         testTeam = teamRepository.save(
-            new Team("Test Team", Topic.STUDY, "This is a test team.", 10, "password", testMember)
+                new Team("Test Team", Topic.STUDY, "This is a test team.", 10, "password", testMember)
         );
 
         // Create and save a test Article
         testArticle = articleRepository.save(
-            new Article(testTeam, testMember, "Test Title", "Test Body", ArticleCategory.NOMAL, new ArrayList<>())
+                new Article(testTeam, testMember, "Test Title", "Test Body", ArticleCategory.NORMAL, new ArrayList<>())
         );
 
         // Add an ArticleImage to the Article
@@ -111,7 +111,7 @@ class ArticleRepositoryTest {
     void findByTeamIdAndDate_shouldReturnPagedArticles() {
         LocalDate today = LocalDate.now();
         Page<Article> articles = articleRepository.findByTeamIdAndDate(
-            testTeam.getTeamId(), today, PageRequest.of(0, 10)
+                testTeam.getTeamId(), today, PageRequest.of(0, 10)
         );
 
         assertThat(articles.getContent()).hasSize(1);

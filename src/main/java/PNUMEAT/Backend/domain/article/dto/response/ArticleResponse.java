@@ -9,7 +9,6 @@ public record ArticleResponse(
     String articleTitle,
     String articleBody,
     LocalDateTime updatedDate,
-    ArticleCategory articleCategory,
     String imageUrl
 ) {
     public static ArticleResponse of(Article article) {
@@ -18,7 +17,6 @@ public record ArticleResponse(
             article.getArticleTitle(),
             article.getArticleBody(),
             article.getUpdatedDate(),
-            article.getArticleCategory(),
             article.getImages().get(0).getImageUrl()
         );
     }

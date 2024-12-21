@@ -5,6 +5,7 @@ package PNUMEAT.Backend.domain.article.service;
 import PNUMEAT.Backend.domain.article.dto.request.ArticleRequest;
 import PNUMEAT.Backend.domain.article.entity.Article;
 import PNUMEAT.Backend.domain.article.entity.ArticleImage;
+import PNUMEAT.Backend.domain.article.enums.ArticleCategory;
 import PNUMEAT.Backend.domain.article.repository.ArticleImageRepository;
 import PNUMEAT.Backend.domain.article.repository.ArticleRepository;
 import PNUMEAT.Backend.domain.auth.entity.Member;
@@ -42,8 +43,8 @@ public class ArticleService {
     private final TeamMemberRepository teamMemberRepository;
 
     public ArticleService(ImageService imageService, ArticleRepository articleRepository,
-        MemberRepository memberRepository, TeamRepository teamRepository,
-        ArticleImageRepository articleImageRepository, TeamMemberRepository teamMemberRepository) {
+                          MemberRepository memberRepository, TeamRepository teamRepository,
+                          ArticleImageRepository articleImageRepository, TeamMemberRepository teamMemberRepository) {
         this.imageService = imageService;
         this.articleRepository = articleRepository;
         this.memberRepository = memberRepository;
@@ -57,15 +58,15 @@ public class ArticleService {
     public void save(Long memberId, ArticleRequest articleRequest, MultipartFile images){
 
         Member member = memberRepository.findById(memberId).orElseThrow(
-            MemberNotFoundException::new
+                MemberNotFoundException::new
         );
 
         Team team = teamRepository.findById(articleRequest.teamId()).orElseThrow(
-            TeamNotFoundException::new
+                TeamNotFoundException::new
         );
 
         Article article = new Article(team,member,articleRequest.articleTitle()
-            ,articleRequest.articleBody(),articleRequest.articleCategory(), new ArrayList<>());
+                ,articleRequest.articleBody(), ArticleCategory.NORMAL, new ArrayList<>());
 
         articleRepository.save(article);
 
@@ -85,14 +86,14 @@ public class ArticleService {
     @Transactional
     public Article getArticleById(Long articleId){
         return articleRepository.findByIdWithImages(articleId).orElseThrow(
-            ArticleNotFoundException::new
+                ArticleNotFoundException::new
         );
     }
 
     @Transactional
     public void deleteArticle(Long articleId,Long memberId) {
         Article article = articleRepository.findById(articleId).orElseThrow(
-            ArticleNotFoundException::new
+                ArticleNotFoundException::new
         );
 
         if (!article.getMember().getId().equals(memberId)) {
@@ -105,7 +106,7 @@ public class ArticleService {
     @Transactional
     public void updateArticle(Long articleId, ArticleRequest articleRequest, MultipartFile image, Long memberId) {
         Article article = articleRepository.findByIdWithImages(articleId).orElseThrow(
-            ArticleNotFoundException::new
+                ArticleNotFoundException::new
         );
 
         if (!article.getMember().getId().equals(memberId)) {
@@ -153,16 +154,14 @@ public class ArticleService {
         if (articleRequest.articleBody() != null) {
             article.updateBody(articleRequest.articleBody());
         }
-        if (articleRequest.articleCategory() != null) {
-            article.updateCategory(articleRequest.articleCategory());
-        }
+
     }
 
     private void handleImageUpdate(Article article, MultipartFile image) {
         if (image != null && !image.isEmpty()) {
             ArticleImage existingImage = article.getImages().stream()
-                .findFirst()
-                .orElse(null);
+                    .findFirst()
+                    .orElse(null);
 
             if (existingImage != null) {
                 imageService.deleteImageByUrl(existingImage.getImageUrl());
@@ -179,8 +178,6 @@ public class ArticleService {
             articleImageRepository.save(articleImage);
         }
     }
-
-
 
 
 }
